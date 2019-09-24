@@ -1,0 +1,22 @@
+{
+  "CheckForUpdates": false,
+  "HideToTray": false,
+  "Accounts": [
+    {
+      "Details": {
+        "Username": "boas_1145",
+        "Password": "47hZ2aL862wSWVnvwgs78BS",
+        "LoginKey": "Gim5Z7NYTYaQdF5nsVg"
+      },
+      "ShowOnlineStatus": true,
+      "ConnectToSteamCommunity": true,
+      "RestartGamesEveryThreeHours": true,
+      "JoinSteamGroup": true,
+      "IgnoreAccount": false,
+      "ChatResponse": "",
+      "Games": [
+        730
+      ]
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+C:\Users\jtm--\Desktop\HourBoostr-master\HourBoostr\Settings\Settings\bin\Release\Settings.exe.config
+C:\Users\jtm--\Desktop\HourBoostr-master\HourBoostr\Settings\Settings\bin\Release\Settings.exe
+C:\Users\jtm--\Desktop\HourBoostr-master\HourBoostr\Settings\Settings\bin\Release\Settings.pdb
+C:\Users\jtm--\Desktop\HourBoostr-master\HourBoostr\Settings\Settings\bin\Release\Newtonsoft.Json.dll
+C:\Users\jtm--\Desktop\HourBoostr-master\HourBoostr\Settings\Settings\bin\Release\Newtonsoft.Json.xml
+C:\Users\jtm--\Desktop\HourBoostr-master\HourBoostr\Settings\Settings\obj\Release\Settings.csprojAssemblyReference.cache
+C:\Users\jtm--\Desktop\HourBoostr-master\HourBoostr\Settings\Settings\obj\Release\Settings.gameForm.resources
+C:\Users\jtm--\Desktop\HourBoostr-master\HourBoostr\Settings\Settings\obj\Release\Settings.mainForm.resources
+C:\Users\jtm--\Desktop\HourBoostr-master\HourBoostr\Settings\Settings\obj\Release\Settings.Properties.Resources.resources
+C:\Users\jtm--\Desktop\HourBoostr-master\HourBoostr\Settings\Settings\obj\Release\Settings.csproj.GenerateResource.cache
+C:\Users\jtm--\Desktop\HourBoostr-master\HourBoostr\Settings\Settings\obj\Release\Settings.csproj.CopyComplete
+C:\Users\jtm--\Desktop\HourBoostr-master\HourBoostr\Settings\Settings\obj\Release\Settings.exe
+C:\Users\jtm--\Desktop\HourBoostr-master\HourBoostr\Settings\Settings\obj\Release\Settings.pdb
+C:\Users\jtm--\Desktop\HourBoostr-master\HourBoostr\Settings\Settings\bin\Release\MetroSet UI.dll
+C:\Users\jtm--\Desktop\EZBoosterV3\Settings\Settings\bin\Release\Settings.exe.config
+C:\Users\jtm--\Desktop\EZBoosterV3\Settings\Settings\bin\Release\Settings.exe
+C:\Users\jtm--\Desktop\EZBoosterV3\Settings\Settings\bin\Release\Settings.pdb
+C:\Users\jtm--\Desktop\EZBoosterV3\Settings\Settings\bin\Release\MetroSet UI.dll
+C:\Users\jtm--\Desktop\EZBoosterV3\Settings\Settings\bin\Release\Newtonsoft.Json.dll
+C:\Users\jtm--\Desktop\EZBoosterV3\Settings\Settings\bin\Release\Newtonsoft.Json.xml
+C:\Users\jtm--\Desktop\EZBoosterV3\Settings\Settings\obj\Release\Settings.csprojAssemblyReference.cache
+C:\Users\jtm--\Desktop\EZBoosterV3\Settings\Settings\obj\Release\Settings.gameForm.resources
+C:\Users\jtm--\Desktop\EZBoosterV3\Settings\Settings\obj\Release\Settings.mainForm.resources
+C:\Users\jtm--\Desktop\EZBoosterV3\Settings\Settings\obj\Release\Settings.Properties.Resources.resources
+C:\Users\jtm--\Desktop\EZBoosterV3\Settings\Settings\obj\Release\Settings.csproj.GenerateResource.cache
+C:\Users\jtm--\Desktop\EZBoosterV3\Settings\Settings\obj\Release\Settings.csproj.CopyComplete
+C:\Users\jtm--\Desktop\EZBoosterV3\Settings\Settings\obj\Release\Settings.exe
+C:\Users\jtm--\Desktop\EZBoosterV3\Settings\Settings\obj\Release\Settings.pdb
