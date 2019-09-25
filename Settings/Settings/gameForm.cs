@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace Settings
 {
@@ -48,11 +49,33 @@ namespace Settings
         {
             InitializeComponent();
             Size = new Size(381, 120);
+            if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+            {
+                // Form
+                this.Text = "Trouver des jeux Steam";
+                // Textbox
+                SendMessage(txtProfile.Handle, EM_SETCUEBANNER, 0, "https://steamcommunity.com/id/xnooztv_main");
+                SendMessage(txtSearch.Handle, EM_SETCUEBANNER, 0, "Recherche de jeu");
+                // Label
+                lvlExampleInput.Text = "Exemple";
+                // Groupbox
+                groupBox2.Text = "URL du profile Steam";
+                gameGroup.Text = "Jeux";
 
-            /*Set placeholder text for text controls*/
-            SendMessage(txtProfile.Handle, EM_SETCUEBANNER, 0, "https://steamcommunity.com/id/xnooztv_main");
-            SendMessage(txtSearch.Handle, EM_SETCUEBANNER, 0, "Recherche de jeu");
-            
+            }
+            else
+            {
+                // Form
+                this.Text = "Find Steam Games";
+                // Textbox
+                SendMessage(txtProfile.Handle, EM_SETCUEBANNER, 0, "https://steamcommunity.com/id/xnooztv_main");
+                SendMessage(txtSearch.Handle, EM_SETCUEBANNER, 0, "Game Search");
+                // Checkbox
+                lvlExampleInput.Text = "Example";
+                // Groupbox
+                groupBox2.Text = "Steam profile URL";
+                gameGroup.Text = "Games";
+            }            
             ActiveControl = lvlExampleInput;
         }
 
@@ -98,7 +121,9 @@ namespace Settings
         /// <param name="e">EventArgs</param>
         private void lvlExampleInput_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(
+            if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+            {
+                MessageBox.Show(
                 "URL complète\n"
                 + "• https://steamcommunity.com/id/xnooztv_main\n"
                 + "• http://steamcommunity.com/profiles/76561198871759336\n\n"
@@ -106,6 +131,17 @@ namespace Settings
                 + "• 76561198871759336\n"
                 + "• xnooztv_main",
                 "Exemple");
+            } else
+            {
+                MessageBox.Show(
+                "Full URL\n"
+                + "• https://steamcommunity.com/id/xnooztv_main\n"
+                + "• http://steamcommunity.com/profiles/76561198871759336\n\n"
+                + "Personal URL or SteamID64\n"
+                + "• 76561198871759336\n"
+                + "• xnooztv_main",
+                "Example");
+            }
         }
 
 
@@ -137,7 +173,13 @@ namespace Settings
                 }
                 else
                 {
-                    MessageBox.Show("La valeur d'entrée du profil est invalide", "Tu t'es trompé..");
+                    if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+                    {
+                        MessageBox.Show("La valeur d'entrée du profil est invalide", "Tu t'es trompé..");
+                    } else
+                    {
+                        MessageBox.Show("The input value of the profile is invalid", "You were mistaken..");
+                    }
                 }
             }
         }
@@ -339,6 +381,11 @@ namespace Settings
         {
             e.Cancel = true;
             Hide();
+        }
+
+        private void gameForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -36,7 +36,13 @@ namespace HourBoostr
             mGlobalDB = GlobalDB.Load(EndPoint.GLOBAL_SETTINGS_FILE_PATH);
             if (mGlobalDB == null)
             {
-                Console.WriteLine($"Erreur lors du chargement de la base de données sur {EndPoint.GLOBAL_SETTINGS_FILE_PATH}. Supprimer le fichier si le problème est récurrent.");
+                if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+                {
+                    Console.WriteLine($"Erreur lors du chargement de la base de données sur {EndPoint.GLOBAL_SETTINGS_FILE_PATH}. Supprimer le fichier si le problème est récurrent.");
+                } else
+                {
+                    Console.WriteLine($"Error loading the database on {EndPoint.GLOBAL_SETTINGS_FILE_PATH}. Delete the file if the problem is recurring.");
+                }
             }
             else
             {
@@ -55,7 +61,13 @@ namespace HourBoostr
                     }
                     else
                     {
-                        Console.WriteLine("Aucun compte n'a été chargé à partir des paramètres. Appuyez sur une touche pour quitter.");
+                        if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr")) 
+                        {
+                            Console.WriteLine("Aucun compte n'a été chargé à partir des paramètres. Appuyez sur une touche pour quitter.");
+                        } else
+                        {
+                            Console.WriteLine("No account was loaded from the settings. Press a key to exit.");
+                        }
                         Console.ReadKey();
                     }
                 }

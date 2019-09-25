@@ -63,8 +63,13 @@ namespace HourBoostr
             if (!File.Exists(logPath))
             {
                 File.Create(logPath).Close();
-                Console.WriteLine($"Fichier journaux '{mLogName}' créer dans le dossier '{mLogPath}");
-                Thread.Sleep(250);
+                if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+                {
+                    Console.WriteLine($"Fichier journaux '{mLogName}' créer dans le dossier '{mLogPath}");
+                } else {
+                    Console.WriteLine($"Log file '{mLogName}' create in the folder '{mLogPath}");
+                }
+                    Thread.Sleep(250);
             }
         }
 
@@ -152,7 +157,13 @@ namespace HourBoostr
             }
             catch (Exception ex)
             {
-                Write(LogLevel.Error, $"Impossible de vider le journal - {ex.Message}");
+                if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+                {
+                    Write(LogLevel.Error, $"Impossible de vider le journal - {ex.Message}");
+                } else
+                {
+                    Write(LogLevel.Error, $"Can not flush the log - {ex.Message}");
+                }
             }
         }
     }

@@ -11,7 +11,11 @@ using System.Diagnostics;
 using System.IO;
 using Newtonsoft.Json;
 using System.Runtime.InteropServices;
-
+using System.Threading;
+using System.Globalization;
+using System.Resources;
+using System.Reflection;
+using System.Resources;
 namespace Settings
 {
     public partial class mainForm : Form
@@ -50,12 +54,58 @@ namespace Settings
         {
             InitializeComponent();
 
-            /*Set placeholder text for text controls*/
-            SendMessage(txtUsername.Handle, EM_SETCUEBANNER, 0, "Pseudo");
-            SendMessage(txtPassword.Handle, EM_SETCUEBANNER, 0, "Mot de passe");
-            SendMessage(txtLoginKey.Handle, EM_SETCUEBANNER, 0, "Clé de connexion");
-            SendMessage(txtResponse.Handle, EM_SETCUEBANNER, 0, "Réponse au chat");
-            SendMessage(txtGameItem.Handle, EM_SETCUEBANNER, 0, "ID du jeu");
+            if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+            {
+                // Textbox
+                SendMessage(txtUsername.Handle, EM_SETCUEBANNER, 0, "Pseudo");
+                SendMessage(txtPassword.Handle, EM_SETCUEBANNER, 0, "Mot de passe");
+                SendMessage(txtLoginKey.Handle, EM_SETCUEBANNER, 0, "Clé de connexion");
+                SendMessage(txtResponse.Handle, EM_SETCUEBANNER, 0, "Réponse au chat");
+                SendMessage(txtGameItem.Handle, EM_SETCUEBANNER, 0, "ID du jeu");
+                // Checkbox
+                cbCheckForUpdates.Text = "Vérifier les mises à jour";
+                cbHideToTray.Text = "Cacher dans la barre des tâches";
+                cbOnlineStatus.Text = "Afficher le statut en ligne";
+                cbJoinGroup.Text = "Rejoindre notre groupe Steam";
+                cbCommunity.Text = "Se connecter à Steam Community";
+                cbRestartGames.Text = "Redémarrer les jeux toutes les trois heures";
+                cbIgnoreAccount.Text = "Ignorer le chat Steam";
+                // Label
+                lblStartBooster.Text = "Démarrer le boosting";
+                lblRemoveLoginKey.Text = "supprimer";
+                lblFindGames.Text = "Trouver des jeux";
+                // Groupbox
+                groupBox1.Text = "Options";
+                groupBox2.Text = "Compte Steam";
+                groupBox3.Text = "Liste des jeux";
+                groupBox5.Text = "Général";
+            }
+            else
+            {
+                // Textbox
+                SendMessage(txtUsername.Handle, EM_SETCUEBANNER, 0, "Username");
+                SendMessage(txtPassword.Handle, EM_SETCUEBANNER, 0, "Password");
+                SendMessage(txtLoginKey.Handle, EM_SETCUEBANNER, 0, "Login Key");
+                SendMessage(txtResponse.Handle, EM_SETCUEBANNER, 0, "Chat Response");
+                SendMessage(txtGameItem.Handle, EM_SETCUEBANNER, 0, "Game ID");
+                // Checkbox
+                cbCheckForUpdates.Text = "Check for updates";
+                cbHideToTray.Text = "Hide in the tray";
+                cbOnlineStatus.Text = "Show online status";
+                cbJoinGroup.Text = "Join our Steam group";
+                cbCommunity.Text = "Connect to Steam Community";
+                cbRestartGames.Text = "Restart games every three hours";
+                cbIgnoreAccount.Text = "Ignore Steam Chat";
+                // Label
+                lblStartBooster.Text = "Start boost";
+                lblRemoveLoginKey.Text = "delete";
+                lblFindGames.Text = "Find games";
+                // Groupbox
+                groupBox1.Text = "Settings";
+                groupBox2.Text = "Steam account";
+                groupBox3.Text = "Games List";
+                groupBox5.Text = "General";
+            }
         }
 
 
@@ -65,13 +115,28 @@ namespace Settings
         /// </summary>
         private void mainForm_Load(object sender, EventArgs e)
         {
+            if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+            {
+                lblNewAccount.Text = "+ Ajouter un compte";
+            } else
+            {
+                lblNewAccount.Text = "+ Add account";
+            }
             /*If HourBoostr is running, give warning about saving settings*/
             var procs = Process.GetProcessesByName("EzBooster");
             if (procs.Length > 0)
             {
-                MessageBox.Show("Les paramètres seront remplacer dès la fermeture de EZBooster..\n"
+                if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+                {
+                    MessageBox.Show("Les paramètres seront remplacer dès la fermeture de EZBooster.\n"
                     + "Je ne recommande pas d'apporter de modifications pendant que EZBooster est en cours d'exécution.\n"
                     + "Si vous devez apporter des modifications, faites une copie du fichier Settings.json.", "Attention");
+                } else
+                {
+                    MessageBox.Show("The settings will be replaced when EZBooster closes.\n"
+                    + "I do not recommend making changes while EZBooster is running.\n"
+                    + "If you need to make changes, make a copy of the file Settings.json.", "Warning");
+                }
             }
 
             /*Find the Settings.json file if it exists and load it up*/
@@ -90,7 +155,13 @@ namespace Settings
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Impossible de lire le fichier Settings.json\n\n{ex.Message}", "Ruh roh!");
+                    if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+                    {
+                        MessageBox.Show($"Impossible de lire le fichier Settings.json\n\n{ex.Message}", "Ruh roh!");
+                    } else
+                    {
+                        MessageBox.Show($"Can not read the file Settings.json\n\n{ex.Message}", "Ruh roh!");
+                    }
                 }
             }
 
@@ -117,7 +188,13 @@ namespace Settings
             {
                 string username = user.Details.Username;
                 if (string.IsNullOrWhiteSpace(username))
-                    username = "<vide>";
+                    if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+                    {
+                        username = "<vide>";
+                    } else
+                    {
+                        username = "<empty>";
+                    }
 
                 accountListBox.Items.Add(username);
             }
@@ -155,6 +232,7 @@ namespace Settings
                     };
 
                     user.ShowOnlineStatus = cbOnlineStatus.Checked;
+                    user.checkUpdate = cbCheckForUpdates.Checked;
                     user.JoinSteamGroup = cbJoinGroup.Checked;
                     user.ConnectToSteamCommunity = cbCommunity.Checked;
                     user.RestartGamesEveryThreeHours = cbRestartGames.Checked;
@@ -201,6 +279,7 @@ namespace Settings
 
             /*Assign bool settings*/
             cbOnlineStatus.Checked = mActiveAccount.ShowOnlineStatus;
+            cbCheckForUpdates.Checked = mActiveAccount.checkUpdate;
             cbJoinGroup.Checked = mActiveAccount.JoinSteamGroup;
             cbCommunity.Checked = mActiveAccount.ConnectToSteamCommunity;
             cbRestartGames.Checked = mActiveAccount.RestartGamesEveryThreeHours;
@@ -239,7 +318,13 @@ namespace Settings
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Impossible de mettre à jour le fichier Settings.json file.\n\n{ex.Message}", "Uh oh...");
+                if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+                {
+                    MessageBox.Show($"Impossible de mettre à jour le fichier Settings.json.\n\n{ex.Message}", "Mince...");
+                } else
+                {
+                    MessageBox.Show($"Unable to update the file Settings.json.\n\n{ex.Message}", "Uh oh...");
+                }
             }
         }
 
@@ -265,8 +350,7 @@ namespace Settings
 
         /// <summary>
         /// Creates a new account in the list
-        /// </summary>
-        /// <param name="sender">object</param>
+        /// </summary>        /// <param name="sender">object</param>
         /// <param name="e">EventArgs</param>
         private void lblNewAccount_Click(object sender, EventArgs e)
         {
@@ -287,9 +371,15 @@ namespace Settings
         private void txtUsername_Leave(object sender, EventArgs e)
         {
             /*Set the listbox name to empty if no username is set*/
-            string username = txtUsername.Text;
+           string username = txtUsername.Text;
             if (string.IsNullOrWhiteSpace(username))
-                username = "<vide>";
+                if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+                {
+                    username = "<vide>";
+                } else
+                {
+                    username = "<empty>";
+                }
 
             /*If it's the same username as we started with we don't want
             to make the following comparisons, so we'll end here*/
@@ -299,9 +389,16 @@ namespace Settings
             /*Check for duplicate entries*/
             if (mSettings.Accounts.Any(o => o.Details.Username.ToLower() == username.ToLower()))
             {
-                MessageBox.Show("Ce compte existe déjà dans votre liste de compte.", "Hey, écoute..");
-                txtUsername.Text = string.Empty;
-                txtUsername.Focus();
+                if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr")) {
+                    MessageBox.Show("Ce compte existe déjà dans votre liste de compte.", "Hey, écoute..");
+                    txtUsername.Text = string.Empty;
+                    txtUsername.Focus();
+                } else
+                {
+                    MessageBox.Show("This account already exists in your account list.", "Houston..");
+                    txtUsername.Text = string.Empty;
+                    txtUsername.Focus();
+                }
                 return;
             }
 
@@ -379,8 +476,15 @@ namespace Settings
             and I mean come on, who the fuck cares about that dude. Yeah, lol. Fuck them.*/
             if (!string.IsNullOrWhiteSpace(mActiveAccount.Details.Username))
             {
-                diagResult = MessageBox.Show($"Voulez-vous supprimer le compte '{mActiveAccount.Details.Username}'?",
+                if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+                {
+                    diagResult = MessageBox.Show($"Voulez-vous supprimer le compte '{mActiveAccount.Details.Username}'?",
                     "Supprime un compte", MessageBoxButtons.YesNo);
+                } else
+                {
+                    diagResult = MessageBox.Show($"Do you want to delete the account '{mActiveAccount.Details.Username}'?",
+                    "Delete an account", MessageBoxButtons.YesNo);
+                }
             }
 
             if (diagResult == DialogResult.No)
@@ -590,7 +694,13 @@ namespace Settings
         {
             if (mSettings.Accounts.Count == 0)
             {
-                MessageBox.Show("Aucun compte chargé", "Error");
+                if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+                {
+                    MessageBox.Show("Aucun compte chargé", "Erreur");
+                } else
+                {
+                    MessageBox.Show("No account loaded", "Error");
+                }
                 return;
             }
 
@@ -609,7 +719,13 @@ namespace Settings
             }
             else
             {
-                MessageBox.Show("Impossible de trouver EzBooster.exe", "Oups..");
+                if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+                {
+                    MessageBox.Show("Impossible de trouver EzBooster.exe", "Oups..");
+                } else
+                {
+                    MessageBox.Show("Can not find EzBooster.exe", "RIP..");
+                }
             }
         }
 
@@ -644,7 +760,14 @@ namespace Settings
         {
             if (mSettings.Accounts.Count == 0)
             {
-                MessageBox.Show("Aucun compte chargé", "Error");
+                if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+                {
+                    MessageBox.Show("Aucun compte chargé", "Erreur");
+                }
+                else
+                {
+                    MessageBox.Show("No account loaded", "Error");
+                }
                 return;
             }
 
@@ -663,13 +786,32 @@ namespace Settings
             }
             else
             {
-                MessageBox.Show("Impossible de trouver EzBooster.exe", "Oups..");
+                if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+                {
+                    MessageBox.Show("Impossible de trouver EzBooster.exe", "Oups..");
+                }
+                else
+                {
+                    MessageBox.Show("Can not find EzBooster.exe", "RIP..");
+                }
             }
         }
 
         private void panelSettings_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+        private void English_Language_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void groupBox4_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cbCheckForUpdates_CheckedChanged(object sender, EventArgs e)
+        {
         }
     }
 }

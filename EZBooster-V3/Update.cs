@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace HourBoostr
 {
@@ -26,7 +27,14 @@ namespace HourBoostr
                 }
                 catch
                 {
-                    Console.WriteLine("Impossible de vérifier la nouvelle version. Github fonctionne?");
+                    if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+                    {
+                        Console.WriteLine("Impossible de vérifier la nouvelle version. Github fonctionne?");
+                    } else
+                    {
+                        Console.WriteLine("Could not check the new version. Github down?");
+
+                    }
                 }
             }
 

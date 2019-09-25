@@ -45,7 +45,15 @@ namespace HourBoostr
             mSettings = settings;
 
             if (settings.CheckForUpdates && Update.IsUpdateAvailable())
-                Console.WriteLine("Il y a une mise à jour disponible. Vérifier sur https://github.com/xnooztvFR/EZBooster-V3/releases");
+                if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+                {
+                    Console.WriteLine("Il y a une mise à jour disponible. Vérifier sur https://github.com/xnooztvFR/EZBooster-V3/releases \n Pause pendant 10 secondes");
+                    Thread.Sleep(10000);
+                } else
+                {
+                    Console.WriteLine("There is an update available. Go to https://github.com/xnooztvFR/EZBooster-V3/releases \n Sleeping for 10 seconds.");
+                    Thread.Sleep(10000);
+                }
 
             mBwg.DoWork += MBwg_DoWork;
             mBwg.RunWorkerAsync();
@@ -62,7 +70,13 @@ namespace HourBoostr
             {
                 if (account.IgnoreAccount)
                 {
-                    Console.WriteLine($"{account.Details.Username} a été ignoré.");
+                    if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+                    {
+                        Console.WriteLine($"{account.Details.Username} a été ignoré.");
+                    } else
+                    {
+                        Console.WriteLine($"{account.Details.Username} was ignored.");
+                    }
                     continue;
                 }
 
@@ -76,20 +90,39 @@ namespace HourBoostr
             }
 
             /*Accounts statistics and some fucking baller ascii*/
-            Console.Clear();
-            Console.WriteLine($"\n███████╗███████╗██████╗  ██████╗  ██████╗ ███████╗████████╗███████╗██████╗     ██╗   ██╗██████╗ ");
-            Console.WriteLine($"  ██╔════╝╚══███╔╝██╔══██╗██╔═══██╗██╔═══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗    ██║   ██║╚════██╗");
-            Console.WriteLine($"  █████╗    ███╔╝ ██████╔╝██║   ██║██║   ██║███████╗   ██║   █████╗  ██████╔╝    ██║   ██║ █████╔╝");
-            Console.WriteLine($"  ██╔══╝   ███╔╝  ██╔══██╗██║   ██║██║   ██║╚════██║   ██║   ██╔══╝  ██╔══██╗    ╚██╗ ██╔╝ ╚═══██╗");
-            Console.WriteLine($"  ███████╗███████╗██████╔╝╚██████╔╝╚██████╔╝███████║   ██║   ███████╗██║  ██║     ╚████╔╝ ██████╔╝");
-            Console.WriteLine($"  ╚══════╝╚══════╝╚═════╝  ╚═════╝  ╚═════╝ ╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝      ╚═══╝  ╚═════╝\n");
-            Console.WriteLine($"  Source: https://github.com/xnooztvFR/EZBooster-V3");
-            Console.WriteLine($"  Date de compilation: {File.GetLastWriteTime(Assembly.GetExecutingAssembly().Location)}");
-            Console.WriteLine($"  Version: {Utils.GetVersion()}\n");
-            Console.WriteLine($"  ----------------------------------------");
-            Console.WriteLine($"\n  Il y à {mActiveBotList.Count} compte(s) chargé\n\n  Liste des comptes:");
-            mActiveBotList.ForEach(o => Console.WriteLine("      {0} | {1} Jeux", o.mAccountSettings.Details.Username, o.mSteam.games.Count));
-            Console.WriteLine($"\n\n  Log:\n  ----------------------------------------\n");
+            if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr")) 
+            {
+                Console.Clear();
+                Console.WriteLine($"\n  ███████╗███████╗██████╗  ██████╗  ██████╗ ███████╗████████╗███████╗██████╗     ██╗   ██╗██████╗ ");
+                Console.WriteLine($"  ██╔════╝╚══███╔╝██╔══██╗██╔═══██╗██╔═══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗    ██║   ██║╚════██╗");
+                Console.WriteLine($"  █████╗    ███╔╝ ██████╔╝██║   ██║██║   ██║███████╗   ██║   █████╗  ██████╔╝    ██║   ██║ █████╔╝");
+                Console.WriteLine($"  ██╔══╝   ███╔╝  ██╔══██╗██║   ██║██║   ██║╚════██║   ██║   ██╔══╝  ██╔══██╗    ╚██╗ ██╔╝ ╚═══██╗");
+                Console.WriteLine($"  ███████╗███████╗██████╔╝╚██████╔╝╚██████╔╝███████║   ██║   ███████╗██║  ██║     ╚████╔╝ ██████╔╝");
+                Console.WriteLine($"  ╚══════╝╚══════╝╚═════╝  ╚═════╝  ╚═════╝ ╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝      ╚═══╝  ╚═════╝\n");
+                Console.WriteLine($"  Source: https://github.com/xnooztvFR/EZBooster-V3");
+                Console.WriteLine($"  Date de compilation: {File.GetLastWriteTime(Assembly.GetExecutingAssembly().Location)}");
+                Console.WriteLine($"  Version: {Utils.GetVersion()}\n");
+                Console.WriteLine($"  ----------------------------------------");
+                Console.WriteLine($"\n  Il y à {mActiveBotList.Count} compte(s) chargé\n\n  Liste des comptes:");
+                mActiveBotList.ForEach(o => Console.WriteLine("      {0} | {1} Jeux", o.mAccountSettings.Details.Username, o.mSteam.games.Count));
+                Console.WriteLine($"\n\n  Journaux:\n  ----------------------------------------\n");
+            } else
+            {
+                Console.Clear();
+                Console.WriteLine($"\n  ███████╗███████╗██████╗  ██████╗  ██████╗ ███████╗████████╗███████╗██████╗     ██╗   ██╗██████╗ ");
+                Console.WriteLine($"  ██╔════╝╚══███╔╝██╔══██╗██╔═══██╗██╔═══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗    ██║   ██║╚════██╗");
+                Console.WriteLine($"  █████╗    ███╔╝ ██████╔╝██║   ██║██║   ██║███████╗   ██║   █████╗  ██████╔╝    ██║   ██║ █████╔╝");
+                Console.WriteLine($"  ██╔══╝   ███╔╝  ██╔══██╗██║   ██║██║   ██║╚════██║   ██║   ██╔══╝  ██╔══██╗    ╚██╗ ██╔╝ ╚═══██╗");
+                Console.WriteLine($"  ███████╗███████╗██████╔╝╚██████╔╝╚██████╔╝███████║   ██║   ███████╗██║  ██║     ╚████╔╝ ██████╔╝");
+                Console.WriteLine($"  ╚══════╝╚══════╝╚═════╝  ╚═════╝  ╚═════╝ ╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝      ╚═══╝  ╚═════╝\n");
+                Console.WriteLine($"  Source: https://github.com/xnooztvFR/EZBooster-V3");
+                Console.WriteLine($"  Build date: {File.GetLastWriteTime(Assembly.GetExecutingAssembly().Location)}");
+                Console.WriteLine($"  Version: {Utils.GetVersion()}\n");
+                Console.WriteLine($"  ----------------------------------------");
+                Console.WriteLine($"\n  There is {mActiveBotList.Count} accounts loaded\n\n  List of accounts:");
+                mActiveBotList.ForEach(o => Console.WriteLine("      {0} | {1} Games", o.mAccountSettings.Details.Username, o.mSteam.games.Count));
+                Console.WriteLine($"\n\n  Log:\n  ----------------------------------------\n");
+            }
 
             /*Start status thread*/
             mThreadStatus = new Thread(ThreadStatus);
@@ -132,11 +165,21 @@ namespace HourBoostr
                 /*Get the current time then subtract the time when all bots were done initializing*/
                 /*This will give us an idea of how long the bot has been running*/
                 TimeSpan timeSpan = DateTime.Now - initializedTime;
-                string timeSpentOnline = string.Format("{0} Heures {1} Minutes {2} Secondes",
+                if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+                {
+                    string timeSpentOnline = string.Format("{0} Heures {1} Minutes {2} Secondes",
                     (timeSpan.Days * 24) + timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds);
 
-                Console.Title = $"{EndPoint.CONSOLE_TITLE} | En ligne depuis: {timeSpentOnline}";
-                Thread.Sleep(500);
+                    Console.Title = $"{EndPoint.CONSOLE_TITLE} | En ligne depuis: {timeSpentOnline}";
+                    Thread.Sleep(500);
+                } else
+                {
+                    string timeSpentOnline = string.Format("{0} Hours {1} Minutes {2} Seconds",
+                    (timeSpan.Days * 24) + timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds);
+
+                    Console.Title = $"{EndPoint.CONSOLE_TITLE} | Online since: {timeSpentOnline}";
+                    Thread.Sleep(500);
+                }
             }
         }
     }

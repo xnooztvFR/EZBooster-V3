@@ -28,7 +28,13 @@ namespace HourBoostr
                 };
 
                 File.WriteAllText(EndPoint.SETTINGS_FILE_PATH, JsonConvert.SerializeObject(settings, Formatting.Indented));
-                Console.WriteLine($"Le fichier de paramètres a été écrit dans le dossier {EndPoint.SETTINGS_FILE_PATH}\nVeuillez fermer le programme et modifier les paramètres.");
+                if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+                {
+                    Console.WriteLine($"Le fichier de paramètres a été écrit dans le dossier {EndPoint.SETTINGS_FILE_PATH}\nVeuillez fermer le programme et modifier les paramètres.");
+                } else
+                {
+                    Console.WriteLine($"The settings file was written to the folder {EndPoint.SETTINGS_FILE_PATH}\nPlease close the program and change the settings.");
+                }
             }
             else
             {
@@ -42,7 +48,13 @@ namespace HourBoostr
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Erreur de lecture du fichier de paramètres\n{ex.Message}");
+                    if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+                    {
+                        Console.WriteLine($"Erreur de lecture du fichier de paramètres\n{ex.Message}");
+                    } else
+                    {
+                        Console.WriteLine($"Error reading settings file\n{ex.Message}");
+                    }
                 }
             }
 

@@ -26,3 +26,14 @@ C:\Users\jtm--\Desktop\EZBoosterV3\Settings\Settings\obj\Release\Settings.csproj
 C:\Users\jtm--\Desktop\EZBoosterV3\Settings\Settings\obj\Release\Settings.csproj.CopyComplete
 C:\Users\jtm--\Desktop\EZBoosterV3\Settings\Settings\obj\Release\Settings.exe
 C:\Users\jtm--\Desktop\EZBoosterV3\Settings\Settings\obj\Release\Settings.pdb
+C:\Users\jtm--\Desktop\EZBoosterV3\Settings\Settings\bin\Release\EO.Base.dll
+C:\Users\jtm--\Desktop\EZBoosterV3\Settings\Settings\bin\Release\EO.Pdf.dll
+C:\Users\jtm--\Desktop\EZBoosterV3\Settings\Settings\bin\Release\EO.WebBrowser.dll
+C:\Users\jtm--\Desktop\EZBoosterV3\Settings\Settings\bin\Release\EO.WebEngine.dll
+C:\Users\jtm--\Desktop\EZBoosterV3\Settings\Settings\bin\Release\EO.Base.xml
+C:\Users\jtm--\Desktop\EZBoosterV3\Settings\Settings\bin\Release\EO.Pdf.xml
+C:\Users\jtm--\Desktop\EZBoosterV3\Settings\Settings\bin\Release\EO.WebBrowser.xml
+C:\Users\jtm--\Desktop\EZBoosterV3\Settings\Settings\bin\Release\EO.WebEngine.xml
+C:\Users\jtm--\Desktop\EZBoosterV3\Settings\Settings\obj\Release\Settings.mainForm.fr.resources
+C:\Users\jtm--\Desktop\EZBoosterV3\Settings\Settings\bin\Release\fr\Settings.resources.dll
+C:\Users\jtm--\Desktop\EZBoosterV3\Settings\Settings\obj\Release\fr\Settings.resources.dll

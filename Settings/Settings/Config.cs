@@ -92,7 +92,7 @@ namespace Settings
             /// If we should set steam status to online
             /// </summary>
             public bool ShowOnlineStatus { get; set; } = true;
-
+            public bool checkUpdate { get; set; } = true;
 
             /// <summary>
             /// If we should authenticate to community

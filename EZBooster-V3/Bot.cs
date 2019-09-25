@@ -151,7 +151,12 @@ namespace HourBoostr
             /*If a password isn't set we'll ask for user input*/
             if (string.IsNullOrWhiteSpace(info.Details.Password) && string.IsNullOrWhiteSpace(info.Details.LoginKey))
             {
-                Console.WriteLine("Entrez le mot de passe pour le compte '{0}'", info.Details.Username);
+                if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr")) {
+                    Console.WriteLine("Entrez le mot de passe pour le compte '{0}'", info.Details.Username);
+                } else
+                {
+                    Console.WriteLine("Enter the password for the account '{0}'", info.Details.Username);
+                }
                 info.Details.Password = Password.ReadPassword('*');
             }
 
@@ -205,16 +210,32 @@ namespace HourBoostr
         /// </summary>
         private void Connect()
         {
-            mIsRunning = true;
-            mLog.Write(Log.LogLevel.Info, $"Connexion à Steam ...");
+            if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+            {
+                mIsRunning = true;
+                mLog.Write(Log.LogLevel.Info, $"Connexion à Steam ...");
 
-            try
+                try
+                {
+                    mSteam.client.Connect();
+                }
+                catch (Exception ex)
+                {
+                    mLog.Write(Log.LogLevel.Error, $"Erreur de connexion à Steam: {ex}");
+                }
+            } else
             {
-                mSteam.client.Connect();
-            }
-            catch (Exception ex)
-            {
-                mLog.Write(Log.LogLevel.Error, $"Erreur de connexion à Steam: {ex}");
+                mIsRunning = true;
+                mLog.Write(Log.LogLevel.Info, $"Connecting to Steam ...");
+
+                try
+                {
+                    mSteam.client.Connect();
+                }
+                catch (Exception ex)
+                {
+                    mLog.Write(Log.LogLevel.Error, $"Steam login error: {ex}");
+                }
             }
         }
 
@@ -235,15 +256,27 @@ namespace HourBoostr
                 }
                 catch (Exception ex)
                 {
-                    mLog.Write(Log.LogLevel.Warn, $"Une exception s'est produite pour callbackManager: {ex.Message}");
-                    if (errors++ >= 3)
+                    if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
                     {
-                        /*This has historically only really occured when Steam is down,
-                        but if too many errors happen here we'll pause*/
-                        mLog.Write(Log.LogLevel.Info, $"Pause de 15 minutes en raison d'un trop grand nombre d'erreurs.");
-                        Thread.Sleep(TimeSpan.FromMinutes(15));
+                        mLog.Write(Log.LogLevel.Warn, $"Une exception s'est produite pour callbackManager: {ex.Message}");
+                        if (errors++ >= 3)
+                        {
+                            /*This has historically only really occured when Steam is down,
+                            but if too many errors happen here we'll pause*/
+                            mLog.Write(Log.LogLevel.Info, $"Pause de 15 minutes en raison d'un trop grand nombre d'erreurs.");
+                            Thread.Sleep(TimeSpan.FromMinutes(15));
+                        }
+                    } else
+                    {
+                        mLog.Write(Log.LogLevel.Warn, $"An exception occurred for callbackManager: {ex.Message}");
+                        if (errors++ >= 3)
+                        {
+                            /*This has historically only really occured when Steam is down,
+                            but if too many errors happen here we'll pause*/
+                            mLog.Write(Log.LogLevel.Info, $"Sleeping dor 15 minutes due to too many errors.");
+                            Thread.Sleep(TimeSpan.FromMinutes(15));
+                        }
                     }
-
                     if (!mSteam.client.IsConnected)
                         Connect();
                 }
@@ -259,10 +292,21 @@ namespace HourBoostr
             if (runWorkerCompletedEventArgs.Error != null)
             {
                 Exception ex = runWorkerCompletedEventArgs.Error;
-                mLog.Write(Log.LogLevel.Error, $"Une exception non gérée s'est produite dans l'agent de traitement de callbackManager: {ex.Message}");
+                if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+                {
+                    mLog.Write(Log.LogLevel.Error, $"Une exception non gérée s'est produite dans l'agent de traitement de callbackManager: {ex.Message}");
+                } else
+                {
+                    mLog.Write(Log.LogLevel.Error, $"An unhandled exception occurred in the processing agent of callbackManager: {ex.Message}");
+                }
             }
-
-            mLog.Write(Log.LogLevel.Warn, $"Le bot a cessé de fonctionner!");
+            if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+            {
+                mLog.Write(Log.LogLevel.Warn, $"Le bot a cessé de fonctionner!");
+            } else
+            {
+                mLog.Write(Log.LogLevel.Warn, $"Bot has stopped working!");
+            }
             mIsRunning = false;
         }
 
@@ -283,7 +327,13 @@ namespace HourBoostr
             }
 
             /*Attempt to login*/
-            mLog.Write(Log.LogLevel.Info, $"Connecté à steam! Authentification du compte ...");
+            if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+            {
+                mLog.Write(Log.LogLevel.Info, $"Connecté à steam! Authentification du compte ...");
+            } else
+            {
+                mLog.Write(Log.LogLevel.Info, $"Connected to steam! Account Authentication ...");
+            }
             mSteam.loginDetails.SentryFileHash = sentryHash;
             mSteam.user.LogOn(mSteam.loginDetails);
         }
@@ -308,12 +358,24 @@ namespace HourBoostr
                     their account and started playing, or steam is down. Either way we'll want
                     to pause so we don't get locked out from Steam due to too many requests in
                     a short period of time*/
-                    mLog.Write(Log.LogLevel.Warn, $"Trop de déconnexions ont eu lieu sur une courte période. Paus pendant 15 minutes.");
+                    if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+                    {
+                        mLog.Write(Log.LogLevel.Warn, $"Trop de déconnexions ont eu lieu sur une courte période. Paus pendant 15 minutes.");
+                    } else
+                    {
+                        mLog.Write(Log.LogLevel.Warn, $"Too many disconnections occurred over a short period. Sleeping for 15 minutes.");
+                    }
                     Thread.Sleep(TimeSpan.FromMinutes(15));
                     mDisconnectedCounter = 0;
                 }
+                if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+                {
+                    mLog.Write(Log.LogLevel.Info, $"Reconnexion dans 3s ...");
+                } else
+                {
+                    mLog.Write(Log.LogLevel.Info, $"Reconnection in 3s ...");
 
-                mLog.Write(Log.LogLevel.Info, $"Reconnexion dans 3s ...");
+                }
                 Thread.Sleep(3000);
 
                 Connect();
@@ -372,18 +434,34 @@ namespace HourBoostr
         {
             if (callback.PlayingBlocked == mPlayingBlocked)
                 return;
-
-            if (callback.PlayingBlocked)
+            if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
             {
-                mPlayingBlocked = true;
-                SetGamesPlaying(false);
-                mLog.Write(Log.LogLevel.Info, $"Le compte est actuellement utilisé, le boosting sera repris quand le compte sera à nouveau libre.");
-            }
-            else
+                if (callback.PlayingBlocked)
+                {
+                    mPlayingBlocked = true;
+                    SetGamesPlaying(false);
+                    mLog.Write(Log.LogLevel.Info, $"Le compte est actuellement utilisé, le boosting sera repris quand le compte sera à nouveau libre.");
+                }
+                else
+                {
+                    mPlayingBlocked = false;
+                    SetGamesPlaying(true);
+                    mLog.Write(Log.LogLevel.Info, $"Le compte n'est plus utilisé. Reprise du boosting.");
+                }
+            } else
             {
-                mPlayingBlocked = false;
-                SetGamesPlaying(true);
-                mLog.Write(Log.LogLevel.Info, $"Le compte n'est plus utilisé. Reprise du boosting.");
+                if (callback.PlayingBlocked)
+                {
+                    mPlayingBlocked = true;
+                    SetGamesPlaying(false);
+                    mLog.Write(Log.LogLevel.Info, $"The account is currently used, the boosting will be resumed when the account will be free again.");
+                }
+                else
+                {
+                    mPlayingBlocked = false;
+                    SetGamesPlaying(true);
+                    mLog.Write(Log.LogLevel.Info, $"The account is no longer used.  Resuming boosting.");
+                }
             }
         }
 
@@ -395,58 +473,112 @@ namespace HourBoostr
         /// <param name="callback">SteamUser.LoggedOnCallback</param>
         private void OnLoggedOn(SteamUser.LoggedOnCallback callback)
         {
-            switch (callback.Result)
+            if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
             {
-                case EResult.AccountLogonDenied:
-                    mLog.Write(Log.LogLevel.Text, $"Entrez le code Steam Guard de votre email:");
-                    mSteam.loginDetails.AuthCode = Console.ReadLine();
-                    return;
+                switch (callback.Result)
+                {
+                    case EResult.AccountLogonDenied:
+                        mLog.Write(Log.LogLevel.Text, $"Entrez le code Steam Guard de votre email:");
+                        mSteam.loginDetails.AuthCode = Console.ReadLine();
+                        return;
 
-                case EResult.AccountLoginDeniedNeedTwoFactor:
-                    mLog.Write(Log.LogLevel.Text, $"Entrez votre code d'authentification:");
-                    mSteam.loginDetails.TwoFactorCode = Console.ReadLine();
-                    return;
+                    case EResult.AccountLoginDeniedNeedTwoFactor:
+                        mLog.Write(Log.LogLevel.Text, $"Entrez votre code d'authentification:");
+                        mSteam.loginDetails.TwoFactorCode = Console.ReadLine();
+                        return;
 
-                case EResult.InvalidPassword:
-                    mLog.Write(Log.LogLevel.Warn, $"Le mot de passe n'a pas été accepté.");
-                    if (!mHasConnectedOnce && !string.IsNullOrWhiteSpace(mAccountSettings.Details.LoginKey))
-                    {
-                        /*Remove LoginKey if we haven't been logged in before*/
-                        mLog.Write(Log.LogLevel.Info, $"Le LoginKey à été supprimé de ce compte car il est invalide");
-                        mSteam.loginDetails.LoginKey = string.Empty;
-                        mAccountSettings.Details.LoginKey = string.Empty;
-                    }
-                    else if (string.IsNullOrWhiteSpace(mAccountSettings.Details.Password))
-                    {
-                        /*Re-input password if no password was set in settings*/
-                        mLog.Write(Log.LogLevel.Text, $"Ressaisissez votre mot de passe Steam:");
-                        mSteam.loginDetails.Password = Password.ReadPassword('*');
-                    }
-                    return;
+                    case EResult.InvalidPassword:
+                        mLog.Write(Log.LogLevel.Warn, $"Le mot de passe n'a pas été accepté.");
+                        if (!mHasConnectedOnce && !string.IsNullOrWhiteSpace(mAccountSettings.Details.LoginKey))
+                        {
+                            /*Remove LoginKey if we haven't been logged in before*/
+                            mLog.Write(Log.LogLevel.Info, $"Le LoginKey à été supprimé de ce compte car il est invalide");
+                            mSteam.loginDetails.LoginKey = string.Empty;
+                            mAccountSettings.Details.LoginKey = string.Empty;
+                        }
+                        else if (string.IsNullOrWhiteSpace(mAccountSettings.Details.Password))
+                        {
+                            /*Re-input password if no password was set in settings*/
+                            mLog.Write(Log.LogLevel.Text, $"Ressaisissez votre mot de passe Steam:");
+                            mSteam.loginDetails.Password = Password.ReadPassword('*');
+                        }
+                        return;
 
-                case EResult.TwoFactorCodeMismatch:
-                    mLog.Write(Log.LogLevel.Text, $"Code à deux facteurs invalide! Réessayer:");
-                    mSteam.loginDetails.TwoFactorCode = Console.ReadLine();
-                    return;
+                    case EResult.TwoFactorCodeMismatch:
+                        mLog.Write(Log.LogLevel.Text, $"Code à deux facteurs invalide! Réessayer:");
+                        mSteam.loginDetails.TwoFactorCode = Console.ReadLine();
+                        return;
 
-                case EResult.Timeout:
-                case EResult.NoConnection:
-                case EResult.TryAnotherCM:
-                case EResult.ServiceUnavailable:
-                    mLog.Write(Log.LogLevel.Warn, $"Service indisponible. En attente pendant 1 minute.");
-                    Thread.Sleep(TimeSpan.FromMinutes(1));
-                    return;
-            }
+                    case EResult.Timeout:
+                    case EResult.NoConnection:
+                    case EResult.TryAnotherCM:
+                    case EResult.ServiceUnavailable:
+                        mLog.Write(Log.LogLevel.Warn, $"Service indisponible. En attente pendant 1 minute.");
+                        Thread.Sleep(TimeSpan.FromMinutes(1));
+                        return;
+                }
 
-            /*We didn't account for what happened*/
-            if (callback.Result != EResult.OK)
+                /*We didn't account for what happened*/
+                if (callback.Result != EResult.OK)
+                {
+                    mLog.Write(Log.LogLevel.Warn, $"Réponse EResult non gérée. S'il vous plaît signaler ce problème. --> {callback.Result}");
+                    return;
+                }
+            } else
             {
-                mLog.Write(Log.LogLevel.Warn, $"Réponse EResult non gérée. S'il vous plaît signaler ce problème. --> {callback.Result}");
-                return;
+                switch (callback.Result)
+                {
+                    case EResult.AccountLogonDenied:
+                        mLog.Write(Log.LogLevel.Text, $"Enter the Steam Guard code of your email:");
+                        mSteam.loginDetails.AuthCode = Console.ReadLine();
+                        return;
+
+                    case EResult.AccountLoginDeniedNeedTwoFactor:
+                        mLog.Write(Log.LogLevel.Text, $"Enter your authentication code:");
+                        mSteam.loginDetails.TwoFactorCode = Console.ReadLine();
+                        return;
+
+                    case EResult.InvalidPassword:
+                        mLog.Write(Log.LogLevel.Warn, $"The password is incorrect.");
+                        if (!mHasConnectedOnce && !string.IsNullOrWhiteSpace(mAccountSettings.Details.LoginKey))
+                        {
+                            /*Remove LoginKey if we haven't been logged in before*/
+                            mLog.Write(Log.LogLevel.Info, $"The LoginKey has been removed from this account because it is invalid");
+                            mSteam.loginDetails.LoginKey = string.Empty;
+                            mAccountSettings.Details.LoginKey = string.Empty;
+                        }
+                        else if (string.IsNullOrWhiteSpace(mAccountSettings.Details.Password))
+                        {
+                            /*Re-input password if no password was set in settings*/
+                            mLog.Write(Log.LogLevel.Text, $"Re-enter your Steam password:");
+                            mSteam.loginDetails.Password = Password.ReadPassword('*');
+                        }
+                        return;
+
+                    case EResult.TwoFactorCodeMismatch:
+                        mLog.Write(Log.LogLevel.Text, $"Invalid two-factor code! Retry:");
+                        mSteam.loginDetails.TwoFactorCode = Console.ReadLine();
+                        return;
+
+                    case EResult.Timeout:
+                    case EResult.NoConnection:
+                    case EResult.TryAnotherCM:
+                    case EResult.ServiceUnavailable:
+                        mLog.Write(Log.LogLevel.Warn, $"Steam service unavailable. Waiting for 1 minute.");
+                        Thread.Sleep(TimeSpan.FromMinutes(1));
+                        return;
+                }
+
+                /*We didn't account for what happened*/
+                if (callback.Result != EResult.OK)
+                {
+                    mLog.Write(Log.LogLevel.Warn, $"EResult response unmanaged. Please report this problem. --> {callback.Result}");
+                    return;
+                }
             }
 
             /*Logged in successfully*/
-            mLog.Write(Log.LogLevel.Success, $"Connecté avec succès!");
+            mLog.Write(Log.LogLevel.Success, $"Connected to Steam successfully!");
             mSteam.nounce = callback.WebAPIUserNonce;
             mBotState = BotState.LoggedIn;
 
@@ -488,7 +620,13 @@ namespace HourBoostr
         {
             /*With the LoginKey we'll be able to auto-login to the account
             without the user needing to enter their Authentication code*/
-            mLog.Write(Log.LogLevel.Info, $"LoginKey reçu de Steam");
+            if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+            {
+                mLog.Write(Log.LogLevel.Info, $"LoginKey reçu de Steam");
+            } else
+            {
+                mLog.Write(Log.LogLevel.Info, $"LoginKey received from Steam");
+            }
             mAccountSettings.Details.LoginKey = callback.LoginKey;
             mSteam.loginDetails.LoginKey = callback.LoginKey;
 
@@ -498,7 +636,14 @@ namespace HourBoostr
 
             if (mAccountSettings.ConnectToSteamCommunity)
             {
-                mLog.Write(Log.LogLevel.Info, $"Authentification du compte ...");
+                if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+                {
+                    mLog.Write(Log.LogLevel.Info, $"Authentification du compte ...");
+                } else
+                {
+                    mLog.Write(Log.LogLevel.Info, $"Account Authentication ...");
+
+                }
                 UserWebLogOn();
             }
         }
@@ -510,7 +655,13 @@ namespace HourBoostr
         /// <param name="callback">SteamUser.WebAPIUserNonceCallback</param>
         private void OnWebAPIUserNonce(SteamUser.WebAPIUserNonceCallback callback)
         {
-            mLog.Write(Log.LogLevel.Info, $"Received new user nonce from Steam");
+            if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+            {
+                mLog.Write(Log.LogLevel.Info, $"Nous avons reçu un nouveau utilisateur nonce de Steam");
+            } else
+            {
+                mLog.Write(Log.LogLevel.Info, $"Received new user nonce from Steam");
+            }
             if (callback.Result != EResult.OK)
                 return;
         }
@@ -526,7 +677,13 @@ namespace HourBoostr
             {
                 /*Log the message we just received*/
                 string friendUserName = mSteam.friends.GetFriendPersonaName(callback.Sender);
-                mLogChat.Write(Log.LogLevel.Text, $"Msg de {friendUserName}: {callback.Message}");
+                if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+                {
+                    mLogChat.Write(Log.LogLevel.Text, $"Msg de {friendUserName}: {callback.Message}");
+                } else
+                {
+                    mLogChat.Write(Log.LogLevel.Text, $"Chat from {friendUserName}: {callback.Message}");
+                }
 
                 /*Clear blocked users that are older than 10 minutes
                 This is to avoid responding every time a user is spamming us in the chat*/
@@ -548,7 +705,13 @@ namespace HourBoostr
 
                     /*Respond to user*/
                     mSteam.friends.SendChatMessage(callback.Sender, EChatEntryType.ChatMsg, mAccountSettings.ChatResponse);
-                    mLogChat.Write(Log.LogLevel.Info, $"Réponse ç {friendUserName}");
+                    if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+                    {
+                        mLogChat.Write(Log.LogLevel.Info, $"Réponse à {friendUserName}");
+                    } else
+                    {
+                        mLogChat.Write(Log.LogLevel.Info, $"Respond to {friendUserName}");
+                    }
                     mSteamChatBlockList.Add(msgData);
                 }
             }
@@ -564,7 +727,13 @@ namespace HourBoostr
             {
                 if (mSteam.web.Authenticate(mSteam.uniqueId, mSteam.client, mSteam.nounce))
                 {
-                    mLog.Write(Log.LogLevel.Success, $"Utilisateur authentifié!");
+                    if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+                    {
+                        mLog.Write(Log.LogLevel.Success, $"Utilisateur authentifié!");
+                    } else
+                    {
+                        mLog.Write(Log.LogLevel.Success, $"Authenticated user!");
+                    }
                     mBotState = BotState.LoggedInWeb;
 
                     /*If we should go online*/
@@ -595,7 +764,13 @@ namespace HourBoostr
             }
             catch (Exception ex)
             {
-                mLog.Write(Log.LogLevel.Error, $"Erreur sur UserWebLogon: {ex.Message}");
+                if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+                {
+                    mLog.Write(Log.LogLevel.Error, $"Erreur sur UserWebLogon: {ex.Message}");
+                } else
+                {
+                    mLog.Write(Log.LogLevel.Error, $"Error on UserWebLogon: {ex.Message}");
+                }
             }
         }
 
@@ -613,7 +788,12 @@ namespace HourBoostr
 
             if (!mSteam.web.VerifyCookies())
             {
-                mLog.Write(Log.LogLevel.Warn, $"Les cookies étaient obsolètes et demandaient un nouvel utilisateur nonce ...");
+                if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr")) {
+                    mLog.Write(Log.LogLevel.Warn, $"Les cookies étaient obsolètes et demandaient un nouvel utilisateur nonce ...");
+                } else
+                {
+                    mLog.Write(Log.LogLevel.Warn, $"The cookies were obsolete and required a new nonce user ...");
+                }
                 mSteam.user.RequestWebAPIUserNonce();
                 mBotState = BotState.LoggedIn;
             }
@@ -626,14 +806,27 @@ namespace HourBoostr
         /// </summary>
         private void RestartGames(object sender, ElapsedEventArgs e)
         {
-            /*Stop games*/
-            SetGamesPlaying(false);
-            mLog.Write(Log.LogLevel.Info, $"Arrêt des jeux pendant 5 minutes ...");
-            Thread.Sleep(TimeSpan.FromMinutes(5));
+            if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+            {
+                /*Stop games*/
+                SetGamesPlaying(false);
+                mLog.Write(Log.LogLevel.Info, $"Arrêt des jeux pendant 5 minutes ...");
+                Thread.Sleep(TimeSpan.FromMinutes(5));
 
-            /*Start games*/
-            mLog.Write(Log.LogLevel.Info, $"Rédémarrage OK!");
-            SetGamesPlaying(true);
+                /*Start games*/
+                mLog.Write(Log.LogLevel.Info, $"Rédémarrage OK!");
+                SetGamesPlaying(true);
+            } else
+            {
+                /*Stop games*/
+                SetGamesPlaying(false);
+                mLog.Write(Log.LogLevel.Info, $"Stopping games for 5 minutes ...");
+                Thread.Sleep(TimeSpan.FromMinutes(5));
+
+                /*Start games*/
+                mLog.Write(Log.LogLevel.Info, $"Restart OK!");
+                SetGamesPlaying(true);
+            }
         }
 
 
@@ -666,7 +859,13 @@ namespace HourBoostr
 
             /*Tell the client that we're playing these games*/
             mSteam.client.Send(gamesPlaying);
-            mLog.Write(Log.LogLevel.Info, $"{gameList.Count} jeux a été défini comme jouant.");
+            if (Thread.CurrentThread.CurrentCulture.Name.StartsWith("fr"))
+            {
+                mLog.Write(Log.LogLevel.Info, $"{gameList.Count} jeux a été défini comme jouant.");
+            } else
+            {
+                mLog.Write(Log.LogLevel.Info, $"{gameList.Count} games was defined as playing.");
+            }
         }
     }
 }
